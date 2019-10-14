@@ -10,11 +10,11 @@ namespace WeatherBackup
     public class OpenWeatherConnector
     {
         private readonly string _apiKey;
+        private readonly Config _config;
         public OpenWeatherConnector()
         {
-            // _apiKey = GetApiKey();
-            _apiKey = "HEREYOURAPIKEY";
-
+            _config = new Config();
+            _apiKey = _config.OpenWeatherMapApiKey;
         }
         public Weather GetWeather(string city)
         {
