@@ -33,3 +33,4 @@ msbuild.wrn
 
 config.xml
 *.db
+appsettings.json
