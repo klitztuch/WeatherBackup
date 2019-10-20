@@ -7,7 +7,7 @@ namespace WeatherBackup
         public void Run()
         {
             var openWeatherConnector = new OpenWeatherConnector();
-            var weather = openWeatherConnector.GetWeather("Osnabrück");
+            var weather = openWeatherConnector.GetWeather();
 
             var liteDbConnector = new LiteDbConnector("WeatherData.db");
             liteDbConnector.InsertSingleData(weather);
