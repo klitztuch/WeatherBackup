@@ -31,6 +31,5 @@ msbuild.wrn
 # Visual Studio 2015
 .vs/
 
-config.xml
 *.db
 appsettings.json

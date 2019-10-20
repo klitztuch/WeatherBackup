@@ -10,17 +10,30 @@ namespace WeatherBackup
     public class OpenWeatherConnector
     {
         private readonly string _apiKey;
+        private readonly string _location;
+        private readonly Config _config;
         public OpenWeatherConnector()
         {
-            // _apiKey = GetApiKey();
-            _apiKey = "HEREYOURAPIKEY";
-
+            _config = new Config();
+            _apiKey = _config.OpenWeatherMapApiKey;
+            _location = _config.Location;
         }
-        public Weather GetWeather(string city)
+
+        /// <summary>
+        /// Gets the weather for the location parameter. 
+        /// If no location is given, location is taken from the config
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public Weather GetWeather(string location = null)
         {
             Console.WriteLine("Getting Weather:");
-            var stringResult = GetStringResultAsync(city).Result;
-            var rawWeather = JsonConvert.DeserializeObject<OpenWeatherResponse>(GetStringResultAsync(city).Result);
+            if (location == null)
+            {
+                location = _location;
+            }
+            var stringResult = GetStringResultAsync(location).Result;
+            var rawWeather = JsonConvert.DeserializeObject<OpenWeatherResponse>(GetStringResultAsync(location).Result);
             return new Weather
             {
                 Location = rawWeather.Name,
@@ -31,14 +44,14 @@ namespace WeatherBackup
 
         }
 
-        public async Task<string> GetStringResultAsync(string city)
+        public async Task<string> GetStringResultAsync(string location)
         {
             using (var client = new HttpClient())
             {
                 try
                 {
                     client.BaseAddress = new Uri("http://api.openweathermap.org");
-                    var response = await client.GetAsync($"/data/2.5/weather?q={city}&appid={_apiKey}&units=metric");
+                    var response = await client.GetAsync($"/data/2.5/weather?q={location}&appid={_apiKey}&units=metric");
                     response.EnsureSuccessStatusCode();
 
                     return await response.Content.ReadAsStringAsync();

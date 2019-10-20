@@ -1,4 +1,7 @@
-using System.Xml;
+using System;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.FileExtensions;
+using Microsoft.Extensions.Configuration.Json;
 
 namespace WeatherBackup.Model
 {
@@ -8,22 +11,16 @@ namespace WeatherBackup.Model
         /// Gets or sets the OpenWeatherMap API Key
         /// </summary>
         public string OpenWeatherMapApiKey { get; set; }
-
-        public void ReadConfig(string configLocation = "config.xml")
+        /// <summary>
+        /// Gets or sets the Location
+        /// </summary>
+        /// <value></value>
+        public string Location { get; set; }
+        public Config()
         {
-            var doc = new XmlDocument()
-            {
-                PreserveWhitespace = true
-            };
-            try
-            {
-                doc.Load("config.xml");
-            }
-            catch (System.IO.FileNotFoundException)
-            {
-                System.Console.WriteLine("Can't find Configfile");
-                throw;
-            }
+            IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json", true, true).Build();
+            OpenWeatherMapApiKey = configuration["OpenWeatherMapApiKey"];
+            Location = configuration["Location"];
         }
     }
 }
